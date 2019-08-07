@@ -16,13 +16,27 @@ show_queue_help(){
 	echo "exit   -   close queue cli"
 }
 
+add_song_queue(){
+SONG_STRING=$@
+	echo "adding $SONG_STRING to queue..."
+	echo $SONG_STRING >> $WORKING_DIR/queue_list
+	echo "added to queue. Check with show command."
+}
+
 start_queue_cli(){
 	QUEUE_BASH=false
 	while [ $QUEUE_BASH != "true" ]; do
-		read -p "youtube-cli queue> " CMD
+		read -p "youtube-cli> " CMD
 		case $CMD in
 			"help"|"h")
 				show_queue_help
+				;;
+			"show")
+				display_queue
+				;;
+			"add"*)
+				SONG_STRING=${CMD:4}
+				add_song_queue $SONG_STRING
 				;;
 			"exit"|"EXIT")
 				QUEUE_BASH=true
