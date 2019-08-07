@@ -23,6 +23,16 @@ SONG_STRING=$@
 	echo "added to queue. Check with show command."
 }
 
+display_queue(){
+	line_no=0
+	QUEUE_FILE=$WORKING_DIR/queue_list
+	while IFS= read -r line; do
+		line_no=$((line_no+1))
+		echo "$line_no - $line"
+	done < $QUEUE_FILE
+	echo -e "\nto remove type remove <number_of_line>"
+}
+
 start_queue_cli(){
 	QUEUE_BASH=false
 	while [ $QUEUE_BASH != "true" ]; do
@@ -33,6 +43,10 @@ start_queue_cli(){
 				;;
 			"show")
 				display_queue
+				;;
+			"remove"*)
+				LINE_NUMBER=${CMD:5}
+				remove_queue_line $LINE_NUMBER
 				;;
 			"add"*)
 				SONG_STRING=${CMD:4}
