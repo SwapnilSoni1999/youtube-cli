@@ -8,8 +8,34 @@ if [ ! -d $WORKING_DIR ]; then
 	mkdir $WORKING_DIR
 fi
 
+show_queue_help(){
+	echo "play   -   plays all songs in queue list"
+	echo "add    -   adds song in queue list"
+	echo "clear  -   clears all songs in queue"
+	echo "show   -   displays all songs in queue"
+	echo "exit   -   close queue cli"
+}
+
+start_queue_cli(){
+	QUEUE_BASH=false
+	while [ $QUEUE_BASH != "true" ]; do
+		read -p "youtube-cli queue> " CMD
+		case $CMD in
+			"help"|"h")
+				show_queue_help
+				;;
+			"exit"|"EXIT")
+				QUEUE_BASH=true
+				;;
+			*)
+				echo "Seems invalid command type help for more."
+				;;
+		esac
+	done
+}
+
 show_help(){
-	echo -e "Usage: ucc [option] [argument]\n"
+	echo -e "Usage: youtube-cli [option] [argument]\n"
 	echo "-p/--play <title> - search and play audio of the first YouTube search result for <title>."
 	echo "-i/--info - view saved songs and the amount of space they take."
 }
@@ -50,6 +76,10 @@ case "$#" in
 			'-i'|'--info')
 				cat $HOME/.songs/saved
 				du -hs $WORKING_DIR
+			;;
+
+			'-q'|'--queue'|'queue')
+				start_queue_cli
 			;;
 		esac
 		;;
